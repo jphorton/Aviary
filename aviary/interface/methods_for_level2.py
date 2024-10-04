@@ -1451,7 +1451,7 @@ class AviaryProblem(om.Problem):
 
                 if len(phases) > 2:
                     self.traj.link_phases(
-                        phases[1:], ["alpha"], units='rad', connected=False)
+                        phases[1:], ["alpha", "flight_path_angle"], units='rad', ref=1, connected=False)
 
         elif self.mission_method is TWO_DEGREES_OF_FREEDOM:
             if self.analysis_scheme is AnalysisScheme.COLLOCATION:
