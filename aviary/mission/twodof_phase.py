@@ -69,12 +69,15 @@ class TwoDOFPhase(FlightPhaseBase):
                                 fix_initial=fix_initial, fix_final=False, ref=100., defect_ref=100.)
 
         if rotation:
+            wing_incidence = aviary_options.get_val(Aircraft.Wing.INCIDENCE, units='deg')
+            strike_angle = aviary_options.get_val(Aircraft.Design.MAX_FUSELAGE_PITCH_ANGLE, units='deg')
+            
             phase.add_polynomial_control("alpha",
                                          order=control_order,
                                          fix_initial=True,
-                                         lower=Aircraft.Wing.INCIDENCE, upper=Aircraft.Design.MAX_FUSELAGE_PITCH_ANGLE, # defaults: 0., 15.
+                                         lower=wing_incidence, upper=strike_angle, # defaults: 0., 15.
                                          units='deg', ref=10.,
-                                         val=Aircraft.Wing.INCIDENCE,
+                                         val=wing_incidence,
                                          opt=True)
 
         phase.add_timeseries_output("EAS", units="kn")
