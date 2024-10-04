@@ -273,6 +273,17 @@ class UnsteadySolvedODE(BaseODE):
                            promotes_inputs=[
                                ("fuelflow", Dynamic.Mission.FUEL_FLOW_RATE_NEGATIVE_TOTAL), "dt_dr"],
                            promotes_outputs=["dmass_dr"])
+        
+        self.add_subsystem(
+            'char_impedance_comp',
+            om.ExecComp(
+                'char_impedance = density * speed_of_sound',
+                char_impedance={'units': 'kg/(m**2*s)', 'shape': nn},
+                density={'units': 'kg/m**3', 'shape': nn},
+                speed_of_sound={'units': 'm/s', 'shape': nn}),
+            promotes_inputs=[('density', Dynamic.Mission.DENSITY), # WAS 'rho'
+                             ('speed_of_sound', Dynamic.Mission.SPEED_OF_SOUND)],
+            promotes_outputs=['char_impedance'])
 
         if self.options["include_param_comp"]:
             ParamPort.set_default_vals(self)
