@@ -46,7 +46,7 @@ class UnsteadyControlIterGroup(om.Group):
 
         kwargs = {'num_nodes': nn, 'aviary_inputs': aviary_options}
 
-        if clean:
+        if not clean:
             kwargs['method'] = 'low_speed'
         else:
             kwargs['method'] = 'cruise'
