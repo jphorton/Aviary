@@ -168,6 +168,13 @@ class UnsteadySolvedODE(BaseODE):
         throttle_balance_group.linear_solver = om.DirectSolver(assemble_jac=True)
         throttle_balance_group.nonlinear_solver.options['err_on_non_converge'] = True
 
+        # add an ExecComp that calculates the time duration of the phase
+        phase_time_comp = om.ExecComp('phase_time = time - time[0]', units='s', 
+                           time={'shape': nn},
+                           phase_time={'shape': nn})
+        self.add_subsystem('compute_phase_time', phase_time_comp,
+                           promotes_inputs=['time'],
+                           promotes_outputs=['phase_time'])
 
         # add ExecComp to compute residual between throttle and prescribed throttle lapse profile
         throttle_residual_comp = om.ExecComp('throttle_residual = computed_throttle - prescribed_throttle',
