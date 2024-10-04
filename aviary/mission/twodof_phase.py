@@ -113,6 +113,8 @@ class TwoDOFPhase(FlightPhaseBase):
             'clean': self.user_options.get_val('clean'),
             'ground_roll': self.user_options.get_val('ground_roll'),
             'throttle_enforcement': self.user_options.get_val('throttle_enforcement'),
+            'initial_throttle_lapse': self.user_options.get_val('initial_throttle_lapse'),
+            'final_throttle_lapse': self.user_options.get_val('final_throttle_lapse'),
         }
 
 

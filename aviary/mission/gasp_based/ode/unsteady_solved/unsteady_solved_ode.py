@@ -71,6 +71,16 @@ class UnsteadySolvedODE(BaseODE):
             'boundaries or using solver bounds',
         )
         self.options.declare(
+            'initial_throttle_lapse', default=0.0,
+            types=float,
+            desc='initial fraction of total throttle change across phase for linear throttle control'
+        )
+        self.options.declare(
+            'final_throttle_lapse', default=0.0,
+            types=float,
+            desc='final fraction of total throttle change across phase for linear throttle control'
+        )
+        self.options.declare(
             'external_subsystems', default=[],
             desc='list of external subsystem builder instances to be added to the ODE')
         self.options.declare(
@@ -85,6 +95,8 @@ class UnsteadySolvedODE(BaseODE):
         subsystem_options = self.options['subsystem_options']
         core_subsystems = self.options['core_subsystems']
         throttle_enforcement = self.options['throttle_enforcement']
+        initial_throttle_lapse = self.options['initial_throttle_lapse']
+        final_throttle_lapse = self.options['final_throttle_lapse']
 
         if self.options["include_param_comp"]:
             # TODO: paramport
@@ -155,6 +167,16 @@ class UnsteadySolvedODE(BaseODE):
         throttle_balance_group.nonlinear_solver.linesearch = om.BoundsEnforceLS()
         throttle_balance_group.linear_solver = om.DirectSolver(assemble_jac=True)
         throttle_balance_group.nonlinear_solver.options['err_on_non_converge'] = True
+
+
+        # add ExecComp to compute residual between throttle and prescribed throttle lapse profile
+        throttle_residual_comp = om.ExecComp('throttle_residual = computed_throttle - prescribed_throttle',
+                           prescribed_throttle={'val':np.linspace(initial_throttle_lapse, final_throttle_lapse, nn, endpoint=True)},
+                           throttle_residual={'shape': nn},
+                           computed_throttle={'shape': nn})
+        self.add_subsystem('compute_throttle_residual', throttle_residual_comp,
+                           promotes_inputs=[('computed_throttle', Dynamic.Mission.THROTTLE)],
+                           promotes_outputs=['throttle_residual'])
 
         kwargs = {
             'num_nodes': nn,
