@@ -81,6 +81,11 @@ class UnsteadySolvedODE(BaseODE):
             desc='final fraction of total throttle change across phase for linear throttle control'
         )
         self.options.declare(
+            'isa_deltaT', default=0.0,
+            types=float,
+            desc='Temperature delta (deg R) from typical International Standard Atmosphere (ISA) conditions',
+        )
+        self.options.declare(
             'external_subsystems', default=[],
             desc='list of external subsystem builder instances to be added to the ODE')
         self.options.declare(
@@ -97,6 +102,7 @@ class UnsteadySolvedODE(BaseODE):
         throttle_enforcement = self.options['throttle_enforcement']
         initial_throttle_lapse = self.options['initial_throttle_lapse']
         final_throttle_lapse = self.options['final_throttle_lapse']
+        isa_deltaT = self.options['isa_deltaT']
 
         if self.options["include_param_comp"]:
             # TODO: paramport
@@ -104,7 +110,7 @@ class UnsteadySolvedODE(BaseODE):
 
         self.add_subsystem(
             name='atmosphere',
-            subsys=Atmosphere(num_nodes=nn, output_dsos_dh=True),
+            subsys=Atmosphere(num_nodes=nn, output_dsos_dh=True, isa_deltaT=isa_deltaT),
             promotes_inputs=[Dynamic.Mission.ALTITUDE],
             promotes_outputs=[
                 Dynamic.Mission.DENSITY,

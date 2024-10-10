@@ -88,6 +88,7 @@ class FlightPhaseBase(PhaseBuilderBase):
         throttle_enforcement = user_options.get_val('throttle_enforcement')
         initial_throttle_lapse = user_options.get_val('initial_throttle_lapse')
         final_throttle_lapse = user_options.get_val('final_throttle_lapse')
+        isa_deltaT = user_options.get_val('isa_deltaT')
         mach_bounds = user_options.get_item('mach_bounds')
         altitude_bounds = user_options.get_item('altitude_bounds')
         initial_mach = user_options.get_item('initial_mach')[0]
@@ -439,6 +440,8 @@ FlightPhaseBase._add_meta_data('throttle_enforcement', val=None)
 FlightPhaseBase._add_meta_data('initial_throttle_lapse', val=0.0)
 
 FlightPhaseBase._add_meta_data('final_throttle_lapse', val=0.0)
+
+FlightPhaseBase._add_meta_data('isa_deltaT', val=0.0)
 
 FlightPhaseBase._add_meta_data('throttle_allocation', val=ThrottleAllocation.FIXED)
 

@@ -71,7 +71,7 @@ class TwoDOFPhase(FlightPhaseBase):
         if rotation:
             wing_incidence = aviary_options.get_val(Aircraft.Wing.INCIDENCE, units='deg')
             strike_angle = aviary_options.get_val(Aircraft.Design.MAX_FUSELAGE_PITCH_ANGLE, units='deg')
-            
+
             phase.add_polynomial_control("alpha",
                                          order=control_order,
                                          fix_initial=True,
@@ -118,6 +118,7 @@ class TwoDOFPhase(FlightPhaseBase):
             'throttle_enforcement': self.user_options.get_val('throttle_enforcement'),
             'initial_throttle_lapse': self.user_options.get_val('initial_throttle_lapse'),
             'final_throttle_lapse': self.user_options.get_val('final_throttle_lapse'),
+            'isa_deltaT': self.user_options.get_val('isa_deltaT'),
         }
 
 

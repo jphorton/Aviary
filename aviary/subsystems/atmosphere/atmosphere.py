@@ -36,6 +36,13 @@ class Atmosphere(om.Group):
         )
 
         self.options.declare(
+            'isa_deltaT',
+            types=float,
+            default=0.0,
+            desc='Temperature delta (deg R) from typical International Standard Atmosphere (ISA) conditions',
+        )
+
+        self.options.declare(
             "input_speed_type",
             default=SpeedType.TAS,
             types=SpeedType,
@@ -48,11 +55,12 @@ class Atmosphere(om.Group):
         speed_type = self.options['input_speed_type']
         h_def = self.options['h_def']
         output_dsos_dh = self.options['output_dsos_dh']
+        isa_deltaT = self.options['isa_deltaT']
 
         self.add_subsystem(
             name='standard_atmosphere',
             subsys=USatm1976Comp(
-                num_nodes=nn, h_def=h_def, output_dsos_dh=output_dsos_dh
+                num_nodes=nn, h_def=h_def, output_dsos_dh=output_dsos_dh, isa_deltaT=isa_deltaT
             ),
             promotes_inputs=[('h', Dynamic.Mission.ALTITUDE)],
             promotes_outputs=[
