@@ -118,7 +118,7 @@ class TwoDOFPhase(FlightPhaseBase):
             'throttle_enforcement': self.user_options.get_val('throttle_enforcement'),
             'initial_throttle_lapse': self.user_options.get_val('initial_throttle_lapse'),
             'final_throttle_lapse': self.user_options.get_val('final_throttle_lapse'),
-            'isa_deltaT': self.user_options.get_val('isa_deltaT'),
+            #'isa_deltaT': self.user_options.get_val('isa_deltaT'),
         }
 
 

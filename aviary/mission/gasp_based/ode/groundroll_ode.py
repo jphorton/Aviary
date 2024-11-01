@@ -49,6 +49,7 @@ class GroundrollODE(BaseODE):
         self.add_atmosphere(nn)
 
         # broadcast scalar i_wing to alpha for aero
+        #wing_incidence = aviary_options.get_val(Aircraft.Wing.INCIDENCE, units='deg')
         self.add_subsystem("init_alpha",
                            om.ExecComp("alpha = i_wing",
                                        i_wing={"units": "deg", "val": 1.1},
@@ -137,4 +138,4 @@ class GroundrollODE(BaseODE):
         self.set_input_defaults(Dynamic.Mission.VELOCITY_RATE,
                                 val=np.zeros(nn), units="kn/s")
 
-        self.set_input_defaults(Aircraft.Wing.INCIDENCE, val=1.0, units="deg")
+        self.set_input_defaults(Aircraft.Wing.INCIDENCE, val=-0.854237, units="deg") # was 1

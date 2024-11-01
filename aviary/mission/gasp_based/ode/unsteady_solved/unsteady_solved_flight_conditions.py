@@ -168,7 +168,7 @@ class UnsteadySolvedFlightConditions(om.ExplicitComponent):
                 desc="change in equivalent air speed per unit range",
             )
             self.add_input(
-                "drho_dh",
+                "drho_dh_corr",
                 val=np.zeros(nn),
                 units="kg/m**4",
                 desc="change in air density per unit altitude",
@@ -207,7 +207,7 @@ class UnsteadySolvedFlightConditions(om.ExplicitComponent):
             )
             self.declare_partials(
                 of="dTAS_dt_approx",
-                wrt=["drho_dh", Dynamic.Mission.DENSITY, "EAS", "dEAS_dr"],
+                wrt=["drho_dh_corr", Dynamic.Mission.DENSITY, "EAS", "dEAS_dr"],
                 rows=ar,
                 cols=ar,
             )
@@ -231,7 +231,7 @@ class UnsteadySolvedFlightConditions(om.ExplicitComponent):
                 desc="change in mach number per unit range",
             )
             self.add_input(
-                "dsos_dh",
+                "dsos_dh_corr",
                 val=np.zeros(nn),
                 units="m/s/m",
                 desc="change in speed of sound per unit altitude",
@@ -280,7 +280,7 @@ class UnsteadySolvedFlightConditions(om.ExplicitComponent):
             )
 
             self.declare_partials(of="dTAS_dt_approx",
-                                  wrt=["dmach_dr", "dsos_dh"],
+                                  wrt=["dmach_dr", "dsos_dh_corr"],
                                   rows=ar, cols=ar)
 
     def compute(self, inputs, outputs):
@@ -304,7 +304,7 @@ class UnsteadySolvedFlightConditions(om.ExplicitComponent):
 
         elif in_type is SpeedType.EAS:
             eas = inputs["EAS"]
-            drho_dh = inputs["drho_dh"]
+            drho_dh = inputs["drho_dh_corr"]
             deas_dr = inputs["dEAS_dr"]
             outputs[Dynamic.Mission.VELOCITY] = tas = eas / sqrt_rho_rho_sl
             outputs[Dynamic.Mission.MACH] = tas / sos
@@ -319,7 +319,7 @@ class UnsteadySolvedFlightConditions(om.ExplicitComponent):
             outputs[Dynamic.Mission.VELOCITY] = tas = sos * mach
             outputs["EAS"] = tas * sqrt_rho_rho_sl
             dmach_dt_approx = dmach_dr * tas * cgam
-            dsos_dt_approx = inputs["dsos_dh"] * tas * sgam
+            dsos_dt_approx = inputs["dsos_dh_corr"] * tas * sgam
             outputs["dTAS_dt_approx"] = dmach_dt_approx * sos \
                 + dsos_dt_approx * tas / sos
 
@@ -380,7 +380,7 @@ class UnsteadySolvedFlightConditions(om.ExplicitComponent):
             partials[Dynamic.Mission.VELOCITY, Dynamic.Mission.DENSITY] = dTAS_dRho
             partials[Dynamic.Mission.VELOCITY, "EAS"] = dTAS_dEAS
             partials["dTAS_dt_approx", "dEAS_dr"] = TAS * cgam * (rho_sl / rho)**1.5
-            partials['dTAS_dt_approx', 'drho_dh'] = -0.5 * \
+            partials['dTAS_dt_approx', 'drho_dh_corr'] = -0.5 * \
                 EAS * TAS * sgam * rho_sl**1.5 / rho_sl**2.5
 
         else:
@@ -402,4 +402,4 @@ class UnsteadySolvedFlightConditions(om.ExplicitComponent):
                 TAS * (1 / rho_sl) ** 0.5 * 0.5 * rho ** (-0.5)
             )
             partials['dTAS_dt_approx', 'dmach_dr'] = TAS * cgam * sos
-            partials['dTAS_dt_approx', 'dsos_dh'] = TAS**2 * sgam / sos
+            partials['dTAS_dt_approx', 'dsos_dh_corr'] = TAS**2 * sgam / sos
