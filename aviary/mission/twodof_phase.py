@@ -5,7 +5,7 @@ from aviary.mission.initial_guess_builders import InitialGuessState, InitialGues
 
 from aviary.utils.aviary_values import AviaryValues
 from aviary.variable_info.variable_meta_data import _MetaData
-from aviary.variable_info.variables import Dynamic, Aircraft
+from aviary.variable_info.variables import Dynamic
 from aviary.mission.gasp_based.ode.unsteady_solved.unsteady_solved_ode import UnsteadySolvedODE
 from aviary.variable_info.enums import SpeedType, EquationsOfMotion
 
@@ -69,15 +69,12 @@ class TwoDOFPhase(FlightPhaseBase):
                                 fix_initial=fix_initial, fix_final=False, ref=100., defect_ref=100.)
 
         if rotation:
-            wing_incidence = aviary_options.get_val(Aircraft.Wing.INCIDENCE, units='deg')
-            strike_angle = aviary_options.get_val(Aircraft.Design.MAX_FUSELAGE_PITCH_ANGLE, units='deg')
-
             phase.add_polynomial_control("alpha",
                                          order=control_order,
                                          fix_initial=True,
-                                         lower=wing_incidence, upper=strike_angle, # defaults: 0., 15.
+                                         lower=0., upper=15.,
                                          units='deg', ref=10.,
-                                         val=wing_incidence,
+                                         val=0.,
                                          opt=True)
 
         phase.add_timeseries_output("EAS", units="kn")
