@@ -962,7 +962,11 @@ class AviaryProblem(om.Problem):
             if phase_idx > 0:
                 input_initial = True
 
-            if fix_initial or input_initial:
+            if self.mission_method is SOLVED_2DOF:
+                # Solved 2DOF sets its own time options.
+                pass
+            
+            elif fix_initial or input_initial:
 
                 if self.comm.size > 1:
                     # Phases are disconnected to run in parallel, so initial ref is valid.
