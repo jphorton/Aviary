@@ -72,7 +72,7 @@ class TwoDOFPhase(FlightPhaseBase):
             phase.add_polynomial_control("alpha",
                                          order=control_order,
                                          fix_initial=True,
-                                         lower=0., upper=15.,
+                                         lower=0., upper=25.,
                                          units='deg', ref=10.,
                                          val=0.,
                                          opt=True)
