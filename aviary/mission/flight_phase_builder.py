@@ -127,7 +127,7 @@ class FlightPhaseBase(PhaseBuilderBase):
 
         phase.add_state(
             Dynamic.Mission.MASS, fix_initial=fix_initial_mass, fix_final=False,
-            lower=0.0, ref=1e4, defect_ref=1e6, units='kg',
+            lower=0.0, ref=1e4, defect_ref=1e3, units='kg',
             rate_source=rate_source,
             targets=Dynamic.Mission.MASS,
             input_initial=input_initial_mass,
