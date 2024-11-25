@@ -661,6 +661,7 @@ class Dynamic:
         TORQUE_MAX = 'torque_max'
         VELOCITY = 'velocity'
         VELOCITY_RATE = 'velocity_rate'
+        VISCOSITY = 'viscosity'
 
 
 class Mission:
