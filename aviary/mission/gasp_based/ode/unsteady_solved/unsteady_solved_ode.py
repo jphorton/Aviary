@@ -110,18 +110,41 @@ class UnsteadySolvedODE(BaseODE):
 
         self.add_subsystem(
             name='atmosphere',
-            subsys=Atmosphere(num_nodes=nn, output_dsos_dh=True),#, isa_deltaT=isa_deltaT),
+            subsys=Atmosphere(num_nodes=nn, output_dsos_dh=True, output_abs_humidity=True),
             promotes_inputs=[Dynamic.Mission.ALTITUDE],
             promotes_outputs=[
                 Dynamic.Mission.DENSITY,
                 Dynamic.Mission.SPEED_OF_SOUND,
                 Dynamic.Mission.TEMPERATURE,
                 Dynamic.Mission.STATIC_PRESSURE,
-                "viscosity_corr",
-                "drhos_dh_corr",
-                "dsos_dh_corr",
+                Dynamic.Mission.VISCOSITY,
+                "abs_humidity",
+                "drhos_dh",
+                "dsos_dh",
+                #'*',
             ],
         )
+
+        # self.add_subsystem(
+        #     name='humidity_comp',
+        #     subsys=om.ExecComp([
+        #         'abs_humidity_corr = (70.0 / (pres_corr / 14.696)) * 10**(8.4256 - (10.1995 / (temp_corr / 518.67)) - 4.922 * log((temp_corr / 518.67)))'
+        #         ],
+        #         pres_corr={'shape': nn, 'units': 'psi'},
+        #         temp_corr={'shape': nn, 'units': 'degR'},
+        #         #pres_SL={'shape': nn, 'units': 'psi'},
+        #         #temp_SL={'shape': nn, 'units': 'degR'},
+        #         abs_humidity_corr={'shape': nn, 'units': 'unitless'},
+        #         has_diag_partials=True,
+        #     ),
+        #     promotes_inputs=[
+        #         ('pres_corr', Dynamic.Mission.STATIC_PRESSURE),
+        #         ('temp_corr', Dynamic.Mission.TEMPERATURE),
+        #     ],
+        #     promotes_outputs=[
+        #         'abs_humidity_corr',
+        #     ],
+        # )
 
         self.add_subsystem("flight_path_angle",
                            GammaComp(num_nodes=nn),

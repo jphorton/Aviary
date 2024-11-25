@@ -111,9 +111,16 @@ class GroundrollPhase(PhaseBuilderBase):
         phase.add_timeseries_output("time")
         phase.add_timeseries_output("mass")
         phase.add_timeseries_output(Dynamic.Mission.ALTITUDE)
-        phase.add_timeseries_output("alpha")
-        phase.add_timeseries_output(Dynamic.Mission.FLIGHT_PATH_ANGLE)
+        phase.add_timeseries_output("alpha", units='deg')
+        phase.add_timeseries_output(Dynamic.Mission.FLIGHT_PATH_ANGLE, units='deg')
         phase.add_timeseries_output(Dynamic.Mission.THROTTLE)
+        # ADDED
+        phase.add_timeseries_output(Dynamic.Mission.TEMPERATURE, units="degR")
+        phase.add_timeseries_output(Dynamic.Mission.DENSITY, units="slug/ft**3")
+        phase.add_timeseries_output(Dynamic.Mission.SPEED_OF_SOUND, units="ft/s")
+        phase.add_timeseries_output(Dynamic.Mission.VISCOSITY, units="slug/(ft*s)")
+        phase.add_timeseries_output("abs_humidity")
+
 
         return phase
 

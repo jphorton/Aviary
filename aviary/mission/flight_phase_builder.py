@@ -285,8 +285,8 @@ class FlightPhaseBase(PhaseBuilderBase):
         phase.add_timeseries_output(Dynamic.Mission.ALTITUDE)
 
         if phase_type is EquationsOfMotion.SOLVED_2DOF:
-            phase.add_timeseries_output(Dynamic.Mission.FLIGHT_PATH_ANGLE)
-            phase.add_timeseries_output("alpha")
+            phase.add_timeseries_output(Dynamic.Mission.FLIGHT_PATH_ANGLE, units='deg')
+            phase.add_timeseries_output("alpha", units='deg')
             phase.add_timeseries_output(
                 "fuselage_pitch", output_name="theta", units="deg")
             phase.add_timeseries_output("thrust_req", units="lbf")
